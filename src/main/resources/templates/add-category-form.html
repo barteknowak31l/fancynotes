@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+
+  <title>Adding new category</title>
+</head>
+
+<body>
+
+<div class="container">
+  <h3>Adding new category</h3>
+  <hr>
+
+  <div th:if="${saveError}">
+    <div class="alert alert-danger col-xs-offset-1 col-xs-10">
+      Category You trying to add already exists - choose another name!
+    </div>
+  </div>
+
+  <div th:if="${emptyNameError}">
+    <div class="alert alert-danger col-xs-offset-1 col-xs-10">
+      You must provide non-blank name!
+    </div>
+  </div>
+
+  <form action="#" th:action="@{/categories/addCategory}" th:object="${category}" method="POST">
+
+    <!-- Add hidden form field to handle the update -->
+    <input type="hidden" th:field="*{id}">
+
+    <input type="text" th:field="*{name}" class="form-control mb-4 w-25" placeholder="name">
+    <input type="text" th:field="*{note}" class="form-control mb-4 w-25" placeholder="note">
+
+    <button type="submit" class="btn btn-info col-2">Save</button>
+
+  </form>
+
+  <hr>
+  <a th:href="@{/categories/showAll}">Back to category list</a>
+
+
+</div>
+
+</body>
+</html>

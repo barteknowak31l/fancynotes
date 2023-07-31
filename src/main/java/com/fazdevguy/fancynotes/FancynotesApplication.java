@@ -212,7 +212,7 @@ public class FancynotesApplication {
 
 	private void addCategoriesToUser(UserService userService,CategoryService categoryService) {
 
-		int id = 3;
+		int id = 1;
 		System.out.println("Finding user with id: "+ id);
 
 		User user = userService.findUserById(id);

@@ -56,6 +56,19 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
+    public User findUserByUsernameWithCategories(String username) {
+
+        TypedQuery<User> query = em.createQuery("select u from User u " +
+                "left join fetch u.categoryList " +
+                "where u.username =:data", User.class);
+        query.setParameter("data",username);
+
+        User user = query.getSingleResult();
+
+        return user;
+    }
+
+    @Override
     public List<User> findAllUsers() {
 
         TypedQuery<User> query = em.createQuery("from User u",User.class);
@@ -82,7 +95,7 @@ public class UserDAOImpl implements UserDAO {
 
 
         TypedQuery<User> query = em.createQuery("select u from User u " +
-                "join fetch u.categoryList " +
+                " left join fetch u.categoryList " +
                 "where u.id =:data", User.class);
         query.setParameter("data",id);
 

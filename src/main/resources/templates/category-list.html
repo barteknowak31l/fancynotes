@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th = "http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+
+
+  <title>Your Categories</title>
+</head>
+<body>
+    <div class="container">
+
+      <h3>Your Categories</h3>
+      <hr>
+
+      <!-- Add button -->
+      <a th:href="@{/categories/addForm}" class="btn btn-primary btn-sm mb-3">
+        New category
+      </a>
+
+
+      <!-- Table of categories -->
+      <table class="table table-bordered table-striped">
+
+        <thead class="table-dark">
+        <tr>
+          <th>Name</th>
+          <th>Note</th>
+        </tr>
+        </thead>
+
+        <tbody>
+            <tr th:each="tempCategory : ${categoryList}">
+              <td th:text="${tempCategory.name}"/>
+              <td th:text="${tempCategory.note}"/>
+
+              <!-- todo: ADD UPDATE/DELETE BUTTONS HERE -->
+            </tr>
+        </tbody>
+
+      </table>
+
+        <!-- Home button -->
+        <a th:href="@{/hello}" class="btn btn-primary btn-sm mb-3">
+            Back to home
+        </a>
+
+    </div>
+</body>
+</html>
