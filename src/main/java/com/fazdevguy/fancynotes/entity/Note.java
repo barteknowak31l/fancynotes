@@ -1,6 +1,7 @@
 package com.fazdevguy.fancynotes.entity;
 
 import jakarta.persistence.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
@@ -21,10 +22,12 @@ public class Note {
 
     @Column(name = "start_date")
     @Temporal(TemporalType.DATE)
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date startDate;
 
     @Column(name = "end_date")
     @Temporal(TemporalType.DATE)
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date endDate;
 
     @Column(name = "remind")
@@ -117,4 +120,15 @@ public class Note {
                 ", remind=" + remind +
                 '}';
     }
+
+    public void deepCopy(Note note)
+    {
+        this.id = note.getId();
+        this.name = note.getName();
+        this.description = note.getDescription();
+        this.startDate = note.getStartDate();
+        this.endDate = note.getEndDate();
+        this.remind = note.isRemind();
+    }
+
 }

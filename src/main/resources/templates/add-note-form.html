@@ -1,10 +1,83 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+
+  <title>Adding new note</title>
 </head>
+
 <body>
+
+<div class="container">
+
+  <br>
+  <h3 th:if="${update == null}" th:text="'Adding new ' +${category.name} +' note'"></h3>
+  <h3 th:if="${update}" th:text="'Updating ' +${category.name} +' note'"></h3>
+  <hr>
+
+  <div th:if="${saveError}">
+    <div class="alert alert-danger col-xs-offset-1 col-xs-10">
+      Note you trying to add already exists - choose another name!
+    </div>
+  </div>
+
+  <div th:if="${emptyNameError}">
+    <div class="alert alert-danger col-xs-offset-1 col-xs-10">
+      You must provide non-blank note name!
+    </div>
+  </div>
+
+  <div th:if="${update == null}">
+
+    <form action="#" th:action="@{/notes/addNote(categoryId=${category.id})}" th:object="${note}" method="POST">
+
+      <!-- Add hidden form field to handle the update -->
+      <input type="hidden" th:field="*{id}">
+
+      <input type="text" th:field="*{name}" class="form-control mb-4 w-25" placeholder="name">
+      <textarea class="form-control z-depth-1" rows="5" th:field="*{description}" placeholder="description"></textarea><br>
+      Start date <input type="date" th:field="*{startDate}" class="form-control mb-4 w-25" placeholder="Start date">
+      End date <input type="date" th:field="*{endDate}" class="form-control mb-4 w-25" placeholder="End date">
+      Remind <input type="checkbox" th:field="*{remind}" placeholder="Remind" checked> <br> <br>
+
+      <button type="submit" class="btn btn-info col-2">Save</button>
+
+    </form>
+
+  </div>
+
+
+  <div th:if="${update}">
+
+    <form action="#" th:action="@{/notes/addNote(updateParam=true,categoryId=${category.id})}" th:object="${note}" method="POST">
+
+      <!-- Add hidden form field to handle the update -->
+      <input type="hidden" th:field="*{id}">
+
+      <input type="text" th:field="*{name}" class="form-control mb-4 w-25" placeholder="name">
+      <input type="text" th:field="*{description}" class="form-control mb-4 w-25" placeholder="description">
+      <input type="date" th:field="*{startDate}" class="form-control mb-4 w-25" placeholder="Start date">
+      <input type="date" th:field="*{endDate}" class="form-control mb-4 w-25" placeholder="End date">
+      <input type="checkbox" th:field="*{remind}" class="form-control mb-4 w-25" placeholder="Remind" checked>
+
+      <button type="submit" class="btn btn-info col-2">Save</button>
+
+    </form>
+
+  </div>
+
+
+  <hr>
+  <a th:href="@{/notes/showAll(categoryId=${category.id})}" th:text="'Back to ' + ${category.name} + ' notes'"></a>
+  <br>
+  <a th:href="@{/categories/showAll}">Back to category list</a>
+
+
+</div>
 
 </body>
 </html>

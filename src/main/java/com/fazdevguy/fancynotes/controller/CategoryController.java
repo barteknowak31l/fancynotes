@@ -68,8 +68,6 @@ public class CategoryController {
         try{
 
             if(isUpdate != null && isUpdate){
-
-                System.out.println("===>>> UPDATING CATEGORY " + category.getName());
                 Category oldCategory = categoryService.findCategoryById(oldCategoryId);
                 oldCategory.setName(category.getName());
                 oldCategory.setNote(category.getNote());
@@ -77,9 +75,6 @@ public class CategoryController {
             }
 
             else{
-                System.out.println("===>>> ADDING CATEGORY " + category.getName());
-
-
                 user.addCategory(category);
                 userService.save(user);
             }
@@ -87,7 +82,7 @@ public class CategoryController {
         }
         catch (Exception e){
 
-            e.printStackTrace();
+           // e.printStackTrace();
            model.addAttribute("category", new Category());
            model.addAttribute("saveError",true);
            return "add-category-form";
