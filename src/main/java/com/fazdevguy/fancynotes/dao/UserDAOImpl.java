@@ -42,7 +42,15 @@ public class UserDAOImpl implements UserDAO {
                 "where u.username =:data", User.class);
         query.setParameter("data", username);
 
-        User theUser = query.getSingleResult();
+        User  theUser= null;
+
+        try{
+            theUser = query.getSingleResult();
+        }
+        catch (Exception e)
+        {
+          theUser = null;
+        }
 
         return theUser;
     }

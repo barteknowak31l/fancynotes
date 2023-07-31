@@ -1,8 +1,11 @@
 package com.fazdevguy.fancynotes.entity;
 
 import jakarta.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Entity
@@ -66,9 +69,15 @@ public class User {
         return username;
     }
 
+
+
+
+
     public void setUsername(String username) {
         this.username = username;
     }
+
+
 
     public String getPassword() {
         return password;
@@ -109,6 +118,10 @@ public class User {
     public void setCategoryList(List<Category> categoryList) {
         this.categoryList = categoryList;
     }
+
+
+
+
 
 
     @Override

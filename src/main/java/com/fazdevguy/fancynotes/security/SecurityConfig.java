@@ -1,5 +1,6 @@
 package com.fazdevguy.fancynotes.security;
 
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -11,6 +12,7 @@ import javax.sql.DataSource;
 
 @Configuration
 public class SecurityConfig {
+
 
     // Support for JDBC
     @Bean
@@ -32,13 +34,14 @@ public class SecurityConfig {
     // and also to set login/register/error pages
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
-        http.authorizeHttpRequests(configurer -> configurer
+        http.authorizeHttpRequests(configurer -> configurer.
+                        requestMatchers("/register/**").permitAll()
                 .requestMatchers("/").hasRole("EMPLOYEE")
                 .anyRequest().authenticated()
         )
                .formLogin(form ->
                        form
-                                .loginPage("/loginPage")
+                                .loginPage("/login/loginPage")
                                 .loginProcessingUrl("/authenticateTheUser")
                                 .permitAll()
                 )
@@ -49,6 +52,5 @@ public class SecurityConfig {
 
         return http.build();
     }
-
 
 }
