@@ -63,7 +63,7 @@ public class CategoryDAOImpl implements CategoryDAO{
     public Category findCategoryWithNotesById(int id) {
 
         TypedQuery<Category> query = em.createQuery("select c from Category c " +
-                "join fetch c.notesList " +
+                "left join fetch c.notesList " +
                 "where c.id =:data", Category.class);
         query.setParameter("data",id);
 

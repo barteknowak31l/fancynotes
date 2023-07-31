@@ -29,6 +29,7 @@
         <tr>
           <th>Name</th>
           <th>Note</th>
+          <th>Action</th>
         </tr>
         </thead>
 
@@ -37,7 +38,27 @@
               <td th:text="${tempCategory.name}"/>
               <td th:text="${tempCategory.note}"/>
 
-              <!-- todo: ADD UPDATE/DELETE BUTTONS HERE -->
+                <!-- todo: ADD UPDATE/DELETE BUTTONS HERE -->
+                <td>
+
+                    <a th:href="@{/notes/showAll(categoryId=${tempCategory.id})}" class="btn btn-info btn-sm">
+                        Show notes
+                    </a>
+
+
+                    <a th:href="@{/categories/update(categoryId=${tempCategory.id})}" class="btn btn-info btn-sm">
+                        Update Category
+                    </a>
+
+                    <a th:href="@{/categories/delete(categoryId=${tempCategory.id})}"
+                       class="btn btn-info btn-sm"
+                    onclick="if (!(confirm('Are you sure to delete this category?'))) return false">
+                        Delete Category
+                    </a>
+
+
+                </td>
+
             </tr>
         </tbody>
 

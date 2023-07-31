@@ -1,5 +1,6 @@
 package com.fazdevguy.fancynotes.entity;
 
+import com.fazdevguy.fancynotes.service.CategoryService;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
