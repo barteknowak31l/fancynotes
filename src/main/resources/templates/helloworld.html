@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th = "http://www.thymeleaf.org">
+
+
+<head>
+    <meta charset="UTF-8">
+    <title>FancyNotes</title>
+</head>
+<body>
+
+    <!--<p th:text="'Hello ' + ${usr.getFirstName()} + ' ' + ${usr.getLastName()} + '!'" class="funny" /> -->
+    <p th:text="'Hello ' + ${usr} " class="funny" />
+
+    <p th:text="'Time on the server is ' + ${current_date}" class="funny" />
+    <hr>
+
+    <hr>
+
+    <form action="#" th:action="@{logout}" method="POST">
+        <input type="submit" value="logout" />
+    </form>
+
+</body>
+</html>
