@@ -13,13 +13,30 @@
 <body>
 <div class="container">
 
-  <h3 th:text="'Your ' + ${category.name} + ' notes'"></h3>
+  <h3 th:text="'Your ' + (${archived} ? 'archived ' : '') + ${category.name} + ' notes'"></h3>
   <hr>
 
-  <!-- Add button -->
-  <a th:href="@{/notes/addForm(categoryId=${category.id})}" class="btn btn-primary btn-sm mb-3">
-    New note
-  </a>
+
+  <div th:if="${archived==false}">
+
+    <!-- Add button -->
+    <a th:href="@{/notes/addForm(categoryId=${category.id})}" class="btn btn-primary btn-sm mb-3">
+      New note
+    </a>
+
+    <!-- Show archived button -->
+    <a th:href="@{/notes/showAll(categoryId=${category.id},archived=true)}" class="btn btn-primary btn-sm mb-3">
+      Show archived notes
+    </a>
+  </div>
+
+  <div th:if="${archived}">
+    <!-- Show back button -->
+    <a th:href="@{/notes/showAll(categoryId=${category.id},archived=false)}" class="btn btn-primary btn-sm mb-3">
+      Show non-archived notes
+    </a>
+  </div>
+
 
 
   <!-- Table of categories -->
@@ -27,6 +44,12 @@
 
     <thead class="table-dark">
     <tr>
+      <div th:if="${archived==false}">
+        <th>Send to archive</th>
+      </div>
+      <div th:if="${archived}">
+        <th>Unarchive</th>
+      </div>
       <th>Name</th>
       <th>Description</th>
       <th>Start date</th>
@@ -38,13 +61,21 @@
 
     <tbody>
     <tr th:each="tempNote : ${category.notesList}">
+      <td>
+        <a th:href="@{/notes/switchArchived(noteId=${tempNote.id},archived=${archived})}" class="btn btn-info btn-sm"/>
+      </td>
       <td th:text="${tempNote.name}"/>
       <td th:text="${tempNote.description}"/>
       <td th:text="${tempNote.startDate}"/>
       <td th:text="${tempNote.endDate}"/>
       <td th:text="${tempNote.remind}"/>
 
+      <!-- Action buttons -->
       <td>
+
+        <a th:href="@{/notes/showDetails(noteId=${tempNote.id})}" class="btn btn-info btn-sm">
+          Show details
+        </a>
 
         <a th:href="@{/notes/update(noteId=${tempNote.id})}" class="btn btn-info btn-sm">
           Update Note

@@ -1,5 +1,6 @@
 package com.fazdevguy.fancynotes.dao;
 
+import com.fazdevguy.fancynotes.entity.CustomTextFields;
 import com.fazdevguy.fancynotes.entity.Note;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
@@ -36,7 +37,16 @@ public class NoteDAOImpl implements NoteDAO{
     public List<Note> findAll() {
 
         TypedQuery<Note> query = em.createQuery("from Note n", Note.class);
+        List<Note> notesList = query.getResultList();
 
+        return notesList;
+    }
+
+    @Override
+    public List<Note> findAllByCategoryIdWithArchivedSpecified(int categoryId, boolean archived) {
+        TypedQuery<Note> query = em.createQuery("select n from Note n where n.categoryId=:data and n.archived=:arch", Note.class);
+        query.setParameter("data",categoryId);
+        query.setParameter("arch",archived);
         List<Note> notesList = query.getResultList();
 
         return notesList;
@@ -48,5 +58,17 @@ public class NoteDAOImpl implements NoteDAO{
 
         Note note = em.find(Note.class,id);
         em.remove(note);
+    }
+
+    @Override
+    public CustomTextFields findCustomTextFieldsById(int id) {
+
+        TypedQuery<CustomTextFields> query = em.createQuery("from CustomTextFields where id=:data",CustomTextFields.class);
+        query.setParameter("data",id);
+        CustomTextFields ctf = query.getSingleResult();
+
+        return ctf;
+
+
     }
 }

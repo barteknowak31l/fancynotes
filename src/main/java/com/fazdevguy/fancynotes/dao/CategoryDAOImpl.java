@@ -1,10 +1,13 @@
 package com.fazdevguy.fancynotes.dao;
 
 import com.fazdevguy.fancynotes.entity.Category;
+import com.fazdevguy.fancynotes.entity.Note;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
+import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
 import org.hibernate.Hibernate;
+import org.hibernate.query.NativeQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,12 +20,14 @@ public class CategoryDAOImpl implements CategoryDAO{
 
     private EntityManager em;
 
+    private NoteDAO noteDao;
+
     public CategoryDAOImpl(){};
 
     @Autowired
-    public CategoryDAOImpl(EntityManager entityManager)
-    {
+    public CategoryDAOImpl(EntityManager entityManager, NoteDAO dao) {
         this.em = entityManager;
+        this.noteDao = dao;
     }
 
     @Override
@@ -60,15 +65,31 @@ public class CategoryDAOImpl implements CategoryDAO{
     }
 
     @Override
-    public Category findCategoryWithNotesById(int id) {
+    public Category findCategoryWithNotes(int id) {
 
         TypedQuery<Category> query = em.createQuery("select c from Category c " +
                 "left join fetch c.notesList " +
                 "where c.id =:data", Category.class);
         query.setParameter("data",id);
-
         Category category = query.getSingleResult();
 
         return category;
     }
+
+    @Override
+    public Category findCategoryWithNotesWithArchivedSpecified(int id, boolean archived) {
+        // find category without notes
+        Category category = findCategoryById(id);
+
+        // find notes with categoryId using noteDAO
+        List<Note> notes = noteDao.findAllByCategoryIdWithArchivedSpecified(id, archived);
+        // fetch notes with category
+        category.setNotesList(notes);
+
+        return category;
+    }
+
+
+
+
 }

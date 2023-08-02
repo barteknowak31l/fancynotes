@@ -1,6 +1,7 @@
 package com.fazdevguy.fancynotes.service;
 
 import com.fazdevguy.fancynotes.dao.NoteDAO;
+import com.fazdevguy.fancynotes.entity.CustomTextFields;
 import com.fazdevguy.fancynotes.entity.Note;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,7 +37,17 @@ public class NoteServiceImpl implements NoteService{
     }
 
     @Override
+    public List<Note> findAllByCategoryIdWithArchivedSpecified(int categoryId, boolean archived){
+        return noteDAO.findAllByCategoryIdWithArchivedSpecified(categoryId,archived);
+    }
+
+    @Override
     public void deleteNoteById(int id) {
         noteDAO.deleteNoteById(id);
+    }
+
+    @Override
+    public CustomTextFields findCustomTextFieldsById(int id) {
+        return noteDAO.findCustomTextFieldsById(id);
     }
 }

@@ -23,13 +23,22 @@ public class NotesController {
     private NoteService noteService;
 
     @GetMapping("/showAll")
-    public String showAllNotes(@RequestParam(value = "categoryId") Integer categoryId, Model model){
+    public String showAllNotes(@RequestParam(value = "categoryId") Integer categoryId,
+                               @RequestParam(value = "archived", required = false) Boolean archived,
+                               Model model){
 
-        Category category = categoryService.findCategoryById(categoryId);
+        // check if archived is specified if no set default to false
+        if(archived == null)
+            archived=false;
+
+        // todo: @RequestParam for archived, also button in view
+        Category category = categoryService.findCategoryWithNotesWithArchivedSpecified(categoryId,archived);
         List<Note> notesList = category.getNotesList();
 
+        // add model attribues
         model.addAttribute("category",category);
         model.addAttribute("notesList",notesList);
+        model.addAttribute("archived",archived);
 
         return "notes-list";
 
@@ -38,7 +47,7 @@ public class NotesController {
     @GetMapping("/addForm")
     public String showAddForm(@RequestParam(value = "categoryId") Integer categoryId,Model model){
 
-        Category category = categoryService.findCategoryWithNotesById(categoryId);
+        Category category = categoryService.findCategoryWithNotes(categoryId);
         model.addAttribute("note", new Note());
         model.addAttribute("category",category);
 
@@ -52,18 +61,23 @@ public class NotesController {
                           @RequestParam(value = "categoryId") Integer categoryId,
                           @RequestParam(value="updateParam", required = false) Boolean isUpdate){
 
+        Category category = categoryService.findCategoryWithNotes(categoryId);
+
         // check if note has a name
         if(note.getName().isBlank()){
             model.addAttribute("note", new Note());
             model.addAttribute("emptyNameError",true);
+            model.addAttribute("category",category);
+
             return "add-note-form";
         }
 
         // check if note already exist
-        Category category = categoryService.findCategoryWithNotesById(categoryId);
         if(category.getNotesList().contains(note)){
             model.addAttribute("note", new Note());
             model.addAttribute("saveError",true);
+            model.addAttribute("category",category);
+
             return "add-note-form";
         }
 
@@ -131,7 +145,36 @@ public class NotesController {
         return "redirect:/notes/showAll?categoryId="+categoryId;
     }
 
+    @GetMapping("/switchArchived")
+    public String switchArchived(@RequestParam(value = "noteId") int noteId,
+                                 @RequestParam(value = "archived", required = false) Boolean archived,
+                                 Model model){
+        if(archived == null)
+            archived = false;
+
+        Note note = noteService.findNoteById(noteId);
+        note.setArchived(!note.isArchived());
+        noteService.save(note);
+
+        Integer categoryId = note.getCategoryId();
+
+        return "redirect:/notes/showAll?archived="+archived+"&categoryId="+categoryId;
+    }
 
 
+    //Get Mapping for showDetails @RequestParam noteId (int)
+    @GetMapping("/showDetails")
+    public String showNoteDetails(@RequestParam(value = "noteId") int noteId,
+                                  Model model) {
+
+        // get note from db
+        Note note = noteService.findNoteById(noteId);
+
+        // add note to the model
+        model.addAttribute("note",note);
+
+
+        return "show-note-details";
+    }
 
 }

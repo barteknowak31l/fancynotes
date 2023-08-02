@@ -44,6 +44,22 @@
       End date <input type="date" th:field="*{endDate}" class="form-control mb-4 w-25" placeholder="End date">
       Remind <input type="checkbox" th:field="*{remind}" placeholder="Remind" checked> <br> <br>
 
+      <hr>
+      CUSTOM FIELDS<br><br>
+
+      <textarea class="form-control z-depth-1" rows="1" th:field="*{customTextFields.field1name}" placeholder="Name"></textarea>
+      <textarea class="form-control z-depth-1" rows="3" th:field="*{customTextFields.field1value}" placeholder="Value"></textarea>
+      <br><br>
+
+      <textarea class="form-control z-depth-1" rows="1" th:field="*{customTextFields.field2name}" placeholder="Name"></textarea>
+      <textarea class="form-control z-depth-1" rows="3" th:field="*{customTextFields.field2value}" placeholder="Value"></textarea>
+      <br><br>
+
+      <textarea class="form-control z-depth-1" rows="1" th:field="*{customTextFields.field3name}" placeholder="Name"></textarea>
+      <textarea class="form-control z-depth-1" rows="3" th:field="*{customTextFields.field3value}" placeholder="Value"></textarea>
+      <br><br>
+
+
       <button type="submit" class="btn btn-info col-2">Save</button>
 
     </form>
@@ -62,7 +78,22 @@
       <input type="text" th:field="*{description}" class="form-control mb-4 w-25" placeholder="description">
       <input type="date" th:field="*{startDate}" class="form-control mb-4 w-25" placeholder="Start date">
       <input type="date" th:field="*{endDate}" class="form-control mb-4 w-25" placeholder="End date">
-      <input type="checkbox" th:field="*{remind}" class="form-control mb-4 w-25" placeholder="Remind" checked>
+      Remind <input type="checkbox" th:field="*{remind}" placeholder="Remind" checked> <br> <br>
+
+      <hr>
+      CUSTOM FIELDS<br><br>
+
+      <textarea class="form-control z-depth-1" rows="1" th:field="*{customTextFields.field1name}" placeholder="Name"></textarea>
+      <textarea class="form-control z-depth-1" rows="3" th:field="*{customTextFields.field1value}" placeholder="Value"></textarea>
+      <br><br>
+
+      <textarea class="form-control z-depth-1" rows="1" th:field="*{customTextFields.field2name}" placeholder="Name"></textarea>
+      <textarea class="form-control z-depth-1" rows="3" th:field="*{customTextFields.field2value}" placeholder="Value"></textarea>
+      <br><br>
+
+      <textarea class="form-control z-depth-1" rows="1" th:field="*{customTextFields.field3name}" placeholder="Name"></textarea>
+      <textarea class="form-control z-depth-1" rows="3" th:field="*{customTextFields.field3value}" placeholder="Value"></textarea>
+      <br><br>
 
       <button type="submit" class="btn btn-info col-2">Save</button>
 

@@ -14,6 +14,8 @@ public interface CategoryService {
 
     void deleteCategoryById(int id);
 
-    Category findCategoryWithNotesById(int id);
+    Category findCategoryWithNotes(int id);
+
+    Category findCategoryWithNotesWithArchivedSpecified(int id, boolean archived);
 
 }

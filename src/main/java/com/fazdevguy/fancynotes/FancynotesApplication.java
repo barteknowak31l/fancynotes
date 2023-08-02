@@ -58,8 +58,23 @@ public class FancynotesApplication {
 			//deleteNote(noteService);
 			//deleteNoteViaItsCategory(categoryService);
 
+			//selectNoteAndCustomTextFields(noteService);
+
 
 		};
+	}
+
+	private void selectNoteAndCustomTextFields(NoteService noteService) {
+
+		int noteId = 1;
+
+		// select note with that id
+
+		Note note = noteService.findNoteById(noteId);
+
+		// display CustomFieldNames of that note
+		System.out.println("Note ctf: "+note.getCustomTextFields());
+
 	}
 
 	private void deleteCategoryById(CategoryService categoryService) {
@@ -88,7 +103,7 @@ public class FancynotesApplication {
 
 		int id = 4;
 		System.out.println("finding category with id: " +id);
-		Category category = categoryService.findCategoryWithNotesById(id);
+		Category category = categoryService.findCategoryWithNotes(id);
 		System.out.println("Category found: " + category);
 		System.out.println("Notes: " + category.getNotesList());
 
@@ -98,7 +113,7 @@ public class FancynotesApplication {
 		System.out.println("Note deleted, save category and load it again");
 		categoryService.save(category);
 
-		Category loadedCategory = categoryService.findCategoryWithNotesById(id);
+		Category loadedCategory = categoryService.findCategoryWithNotes(id);
 		System.out.println("Loaded category notes: " + loadedCategory.getNotesList());
 		System.out.println("Done!");
 
@@ -123,7 +138,7 @@ public class FancynotesApplication {
 
 		int id = 4;
 		System.out.println("Finding category with id: " + id);
-		Category category = categoryService.findCategoryWithNotesById(id);
+		Category category = categoryService.findCategoryWithNotes(id);
 		System.out.println("Category found: " + category);
 
 		System.out.println("Notes: " + category.getNotesList());

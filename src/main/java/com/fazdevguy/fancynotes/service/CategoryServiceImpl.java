@@ -44,7 +44,14 @@ public class CategoryServiceImpl implements CategoryService{
     }
 
     @Override
-    public Category findCategoryWithNotesById(int id) {
-        return categoryDAO.findCategoryWithNotesById(id);
+    public Category findCategoryWithNotes(int id) {
+        return categoryDAO.findCategoryWithNotes(id);
     }
+
+    @Override
+    public Category findCategoryWithNotesWithArchivedSpecified(int id, boolean archived) {
+        return categoryDAO.findCategoryWithNotesWithArchivedSpecified(id, archived);
+    }
+
+
 }

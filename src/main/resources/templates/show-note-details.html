@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th = "http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+
+  <title>Note details</title>
+</head>
+
+<body>
+
+<h3>Note Details</h3>  <br>
+
+
+  <!-- Display properties -->
+  <div>
+    Name: <p th:text="${note.name}"> <br>
+  </div>
+
+  <div>
+    Description: <p th:text="${note.description}"> <br>
+  </div>
+
+ <div>
+  Start date: <p th:text="${note.startDate}"> <br>
+ </div>
+
+ <div>
+  End date: <p th:text="${note.endDate}"> <br>
+ </div>
+<div>
+  Remind: <p th:text="${note.remind}"> <br>
+</div>
+<div>
+  Archived: <p th:text="${note.archived}"> <br>
+</div>
+<br><hr>CUSTOM FIELDS<br><br>
+
+<div th:if="${note.customTextFields?.field1name != null && note.customTextFields?.field1name != ''}">
+  <p th:text="${note.customTextFields.field1name} + ':'">
+  <p th:text="${note.customTextFields.field1value}"> <br>
+</div>
+
+<div th:if="${note.customTextFields?.field2name != null && note.customTextFields?.field2name != ''}">
+  <p th:text="${note.customTextFields.field2name} + ':'">
+  <p th:text="${note.customTextFields.field2value}"> <br>
+</div>
+
+<div th:if="${note.customTextFields?.field3name != null && note.customTextFields?.field3name != ''}">
+    <p th:text="${note.customTextFields.field3name} + ':'">
+    <p th:text="${note.customTextFields.field3value}"> <br>
+</div>
+
+<br><hr>
+
+ <!-- Navigation buttons -->
+<a class="btn btn-primary btn-sm mb-3" th:href="@{/notes/showAll(categoryId=${note.category.id})}" th:text="'Back to ' + ${note.category.name} + ' notes'" ></a>
+<br>
+
+<a th:href="@{/categories/showAll}" class="btn btn-primary btn-sm mb-3">
+  Back to Categories
+</a>
+<br>
+
+<a th:href="@{/hello}" class="btn btn-primary btn-sm mb-3">
+  Back to home
+</a>
+
+</body>
+</html>
