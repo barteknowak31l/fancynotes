@@ -1,20 +1,31 @@
 package com.fazdevguy.fancynotes.controller;
 
 import com.fazdevguy.fancynotes.entity.Category;
+import com.fazdevguy.fancynotes.entity.CustomTextFields;
 import com.fazdevguy.fancynotes.entity.Note;
+import com.fazdevguy.fancynotes.misc.CustomFieldFormData;
+import com.fazdevguy.fancynotes.misc.NotesControllerErrorCodesImpl;
 import com.fazdevguy.fancynotes.service.CategoryService;
 import com.fazdevguy.fancynotes.service.NoteService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Repository;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @Controller
 @RequestMapping("/notes")
 public class NotesController {
+
+    @Autowired
+    private NotesControllerErrorCodesImpl errorCodes;
 
     @Autowired
     private CategoryService categoryService;
@@ -48,88 +59,158 @@ public class NotesController {
     public String showAddForm(@RequestParam(value = "categoryId") Integer categoryId,Model model){
 
         Category category = categoryService.findCategoryWithNotes(categoryId);
-        model.addAttribute("note", new Note());
-        model.addAttribute("category",category);
 
+        Note note = new Note(categoryId);
+        model.addAttribute("note",note);
+        model.addAttribute("category",category);
+        model.addAttribute("customTextFields",note.getCustomTextFields());
 
         return "add-note-form";
     }
 
-    @PostMapping("/addNote")
-    public String addNote(@ModelAttribute(value = "note") Note note,
-                          Model model,
-                          @RequestParam(value = "categoryId") Integer categoryId,
-                          @RequestParam(value="updateParam", required = false) Boolean isUpdate){
 
-        Category category = categoryService.findCategoryWithNotes(categoryId);
+
+    @PostMapping(value = "/addNote", params = "save")
+    public String addNoteSave(@ModelAttribute(value = "note") Note note,
+                              @ModelAttribute(value = "customTextFields")ArrayList<CustomTextFields> ctf,
+                              Model model,
+                              @RequestParam(value="updateParam", required = false) Boolean isUpdate){
+
+
+        System.out.println("=====>>> IN SAVE VERSION");
+        Category category = categoryService.findCategoryWithNotes(note.getCategoryId());
+
+
+        String noteValidationResult = validateNoteBeforeAddOrUpdate(note);
 
         // check if note has a name
-        if(note.getName().isBlank()){
-            model.addAttribute("note", new Note());
+        if(noteValidationResult.equals(errorCodes.getCode(NotesControllerErrorCodesImpl.ErrorCodes.EMPTY_NAME_ERROR))){
+
+            model.addAttribute("note", new Note(note.getCategoryId()));
             model.addAttribute("emptyNameError",true);
             model.addAttribute("category",category);
+            model.addAttribute("customTextFields",note.getCustomTextFields());
 
             return "add-note-form";
         }
 
-        // check if note already exist
-        if(category.getNotesList().contains(note)){
-            model.addAttribute("note", new Note());
-            model.addAttribute("saveError",true);
-            model.addAttribute("category",category);
-
-            return "add-note-form";
-        }
 
         // add note to category - this may require adding @RequestParam with categoryId and @RequestParam determining if it is an update instead
         try{
 
-            if(isUpdate != null && isUpdate) {
-                Note oldNote = noteService.findNoteById(note.getId());
-                oldNote.deepCopy(note);
-                noteService.save(oldNote);
+            if(isUpdate != null && isUpdate) { // THIS IS FOR UPDATE - ALSO NEW WITH CTF INCLUDED (its treated as update)
+
+                note = updateAndSaveNote(note);
             }
-            else{
-                category.addNote(note);
-                categoryService.save(category);
+            else{ // THIS IS FOR NEW NOTE
+                note = saveNote(note,category,ctf);
             }
 
         }
-        catch (Exception e)
+        catch (Exception e) // check if there was database error
         {
-           // e.printStackTrace();
+            if(isUpdate != null && isUpdate) // just for update
+            {
+                model.addAttribute("note", note);
+                model.addAttribute("update",true);
+            }
+            else { // just for new note
+                model.addAttribute("note", new Note(note.getCategoryId()));
+            }
 
-            if(isUpdate != null && isUpdate)
+
+            // here for both
+            model.addAttribute("saveError",true);
+            model.addAttribute("category",category);
+            model.addAttribute("customTextFields",note.getCustomTextFields());
+
+            return "add-note-form";
+        }
+
+
+        return "redirect:/notes/showAll?categoryId="+note.getCategoryId();
+    }
+
+    @PostMapping(value = "/addNote", params = "addCtf")
+    public String addNoteAddCtf(@ModelAttribute(value = "note") Note note,
+                                @ModelAttribute(value = "customTextFields")ArrayList<CustomTextFields> ctf,
+                          Model model,
+                          @RequestParam(value="updateParam", required = false) Boolean isUpdate){
+
+
+        Category category = categoryService.findCategoryWithNotes(note.getCategoryId());
+
+        // validate note
+        String noteValidationResult = validateNoteBeforeAddOrUpdate(note);
+
+
+        // check if note has a name
+        if(noteValidationResult.equals(errorCodes.getCode(NotesControllerErrorCodesImpl.ErrorCodes.EMPTY_NAME_ERROR))){
+
+            model.addAttribute("note", note);
+            model.addAttribute("emptyNameError",true);
+            model.addAttribute("category",category);
+            model.addAttribute("customTextFields",note.getCustomTextFields());
+
+            return "add-note-form";
+        }
+
+
+        // add note to category - this may require adding @RequestParam with categoryId and @RequestParam determining if it is an update instead
+        try{
+
+            if(isUpdate != null && isUpdate) { // THIS IS UPDATE
+                note = updateAndSaveNoteWithCTF(note);
+            }
+            else{  // THIS IS NEW NOTE
+                note = saveNoteWithCTF(note,category);
+            }
+
+        }
+        catch (Exception e) // check if there was database error
+        {
+            // e.printStackTrace();
+
+            if(isUpdate != null && isUpdate) // for update
             {
                 model.addAttribute("note", note);
                 model.addAttribute("saveError",true);
                 model.addAttribute("update",true);
             }
-            else {
-                model.addAttribute("note", new Note());
+            else { // for new
+
+                model.addAttribute("note", note);
                 model.addAttribute("saveError",true);
             }
-
+            // for both
             model.addAttribute("category",category);
+            model.addAttribute("customTextFields",note.getCustomTextFields());
 
             return "add-note-form";
         }
 
-        return "redirect:/notes/showAll?categoryId="+categoryId;
+
+
+        model.addAttribute("note", note);
+        model.addAttribute("update",true);
+        model.addAttribute("category",category);
+        model.addAttribute("customTextFields",note.getCustomTextFields());
+
+        return "add-note-form";
     }
 
 
     @GetMapping("/update")
     public String updateNote(@RequestParam(value = "noteId") Integer noteId,
-
                              Model model){
 
         Note note = noteService.findNoteById(noteId);
         Category category = note.getCategory();
         model.addAttribute("note",note);
         model.addAttribute("category",category);
-
+        model.addAttribute("customTextFields",note.getCustomTextFields());
         model.addAttribute("update",true);
+
 
         return "add-note-form";
 
@@ -162,6 +243,35 @@ public class NotesController {
     }
 
 
+    @PostMapping(value = "/addNote", params = "removeCtf")
+    public String deleteCtf(@RequestParam("removeCtf") String removeCtfId,Model model)
+    {
+
+        Integer ctfId = Integer.parseInt(removeCtfId);
+        System.out.println("=====>>> ctfID " + ctfId);
+
+        CustomTextFields ctf = noteService.findCustomTextFieldsById(ctfId);
+
+        // fill note, category from ctfObject
+        Note note = ctf.getNote();
+        Category category = note.getCategory();
+
+        //delete reference from note and delete ctf object
+        note.removeCustomTextFieldFromList(ctf);
+        noteService.deleteCustomTextFieldById(ctfId);
+
+        //save note object
+        noteService.save(note);
+
+        model.addAttribute("note",note);
+        model.addAttribute("category",category);
+        model.addAttribute("customTextFields",note.getCustomTextFields());
+        model.addAttribute("update",true);
+
+        return "add-note-form";
+    }
+
+
     //Get Mapping for showDetails @RequestParam noteId (int)
     @GetMapping("/showDetails")
     public String showNoteDetails(@RequestParam(value = "noteId") int noteId,
@@ -177,4 +287,46 @@ public class NotesController {
         return "show-note-details";
     }
 
+// utilities
+
+    private String validateNoteBeforeAddOrUpdate(Note note){
+
+        if(note.getName().isBlank())
+            return errorCodes.getCode(NotesControllerErrorCodesImpl.ErrorCodes.EMPTY_NAME_ERROR);
+
+
+        return errorCodes.getCode(NotesControllerErrorCodesImpl.ErrorCodes.OK);
+    }
+
+
+    private Note updateAndSaveNote(Note note) {
+        Note oldNote = noteService.findNoteById(note.getId());
+        oldNote.deepCopy(note);
+        return noteService.save(oldNote);
+    }
+
+    private Note saveNote(Note note, Category category, ArrayList<CustomTextFields> ctf) {
+        note.setCustomTextFields(ctf);
+        category.addNote(note);
+        return noteService.save(note);
+    }
+
+    private Note updateAndSaveNoteWithCTF(Note note) {
+        Note oldNote = noteService.findNoteById(note.getId());
+        oldNote.deepCopy(note);
+        oldNote.addCustomTextFieldToList( new CustomTextFields());
+
+        return noteService.save(oldNote);
+    }
+
+    private Note saveNoteWithCTF(Note note, Category category) {
+        note.addCustomTextFieldToList(new CustomTextFields());
+        category.addNote(note);
+        return noteService.save(note);
+    }
+
+
+
 }
+
+

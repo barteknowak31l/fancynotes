@@ -10,35 +10,93 @@
   <title>Note details</title>
 </head>
 
-<body>
+<body style="background-color: #85c2ff;">
 
 <h3>Note Details</h3>  <br>
 
 
-  <!-- Display properties -->
-  <div>
-    Name: <p th:text="${note.name}"> <br>
-  </div>
+<div class="">
 
-  <div>
-    Description: <p th:text="${note.description}"> <br>
-  </div>
+    <div class="row g-0">
+        <!-- Navigation -->
+        <div style="background-color: #878787; height: 90vh;" class="shadow-lg text-center col-md-1 mx-1">
+            Navigation
+            <hr>
+            <br>
 
- <div>
-  Start date: <p th:text="${note.startDate}"> <br>
- </div>
+            <hr>
+            <a class="btn btn-secondary btn-sm mb-4" th:href="@{/notes/showAll(categoryId=${note.category.id})}" th:text="${note.category.name} + ' notes'" ></a>
+            <hr>
 
- <div>
-  End date: <p th:text="${note.endDate}"> <br>
- </div>
-<div>
-  Remind: <p th:text="${note.remind}"> <br>
+            <a th:href="@{/categories/showAll}" class="btn btn-secondary btn-sm mb-4">
+                Categories
+            </a>
+            <hr>
+
+            <a th:href="@{/hello}" class="btn btn-secondary btn-sm mb-4">
+                Home
+            </a>
+
+        </div>
+
+        <!-- Display properties -->
+        <div class="shadow-lg col">
+
+            <div class="row m-5">
+                <div style="background-color: #c4be9d; margin-right: 5px;" class="col shadow-lg">
+                    <div>
+                        Name: <p th:text="${note.name}"> <br>
+                    </div>
+
+                    <div>
+                        Description: <p th:text="${note.description}"> <br>
+                    </div>
+
+                    <div>
+                        Start date: <p th:text="${note.startDate}"> <br>
+                    </div>
+
+                    <div>
+                        End date: <p th:text="${note.endDate}"> <br>
+                    </div>
+                    <div>
+                        Remind: <p th:text="${note.remind}"> <br>
+                    </div>
+                    <div>
+                        Archived: <p th:text="${note.archived}"> <br>
+                    </div>
+                </div>
+
+                <div style="background-color: #c4be9d; margin-left:5px;" class="col shadow-lg">
+
+                    <div>Custom fields</div>
+
+                    <div th:each="ctf, ctfStat : ${note.CustomTextFields}">
+                        <div th:text="${note.CustomTextFields[__${ctfStat.index}__].fieldName} + ':'"></div>
+                        <div th:text="${note.CustomTextFields[__${ctfStat.index}__].fieldValue}"></div>
+                        <br>
+                    </div>
+
+                </div>
+            </div>
+
+
+
+            <div class="w-auto"></div>
+
+
+
+
+        </div>
+
+    </div>
+
+
+
 </div>
-<div>
-  Archived: <p th:text="${note.archived}"> <br>
-</div>
-<br><hr>CUSTOM FIELDS<br><br>
 
+
+<!--
 <div th:if="${note.customTextFields?.field1name != null && note.customTextFields?.field1name != ''}">
   <p th:text="${note.customTextFields.field1name} + ':'">
   <p th:text="${note.customTextFields.field1value}"> <br>
@@ -56,18 +114,7 @@
 
 <br><hr>
 
- <!-- Navigation buttons -->
-<a class="btn btn-primary btn-sm mb-3" th:href="@{/notes/showAll(categoryId=${note.category.id})}" th:text="'Back to ' + ${note.category.name} + ' notes'" ></a>
-<br>
-
-<a th:href="@{/categories/showAll}" class="btn btn-primary btn-sm mb-3">
-  Back to Categories
-</a>
-<br>
-
-<a th:href="@{/hello}" class="btn btn-primary btn-sm mb-3">
-  Back to home
-</a>
+-->
 
 </body>
 </html>

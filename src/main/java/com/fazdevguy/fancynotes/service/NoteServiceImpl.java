@@ -22,8 +22,18 @@ public class NoteServiceImpl implements NoteService{
 
 
     @Override
-    public void save(Note note) {
-        noteDAO.save(note);
+    public Note save(Note note) {
+       return noteDAO.save(note);
+    }
+
+    @Override
+    public void refresh(Note note) {
+        noteDAO.refresh(note);
+    }
+
+    @Override
+    public Note persist(Note note) {
+        return noteDAO.persist(note);
     }
 
     @Override
@@ -49,5 +59,10 @@ public class NoteServiceImpl implements NoteService{
     @Override
     public CustomTextFields findCustomTextFieldsById(int id) {
         return noteDAO.findCustomTextFieldsById(id);
+    }
+
+    @Override
+    public void deleteCustomTextFieldById(int id) {
+        noteDAO.deleteCustomTextFieldById(id);
     }
 }

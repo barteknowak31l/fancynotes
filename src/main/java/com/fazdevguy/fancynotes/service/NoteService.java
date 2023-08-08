@@ -7,7 +7,11 @@ import java.util.List;
 
 public interface NoteService {
 
-    void save(Note note);
+    Note save(Note note);
+
+    void refresh(Note note);
+
+    Note persist(Note note);
 
     Note findNoteById(int id);
 
@@ -16,5 +20,6 @@ public interface NoteService {
     void deleteNoteById(int id);
 
     CustomTextFields findCustomTextFieldsById(int id);
+    void deleteCustomTextFieldById(int id);
 
 }

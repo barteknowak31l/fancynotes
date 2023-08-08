@@ -3,6 +3,7 @@ package com.fazdevguy.fancynotes.dao;
 import com.fazdevguy.fancynotes.entity.CustomTextFields;
 import com.fazdevguy.fancynotes.entity.Note;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -24,8 +25,20 @@ public class NoteDAOImpl implements NoteDAO{
 
     @Override
     @Transactional
-    public void save(Note note) {
-        em.merge(note);
+    public Note save(Note note) {
+        return em.merge(note);
+    }
+
+    @Override
+    @Transactional
+    public void refresh(Note note) {
+        em.refresh(note);
+    }
+
+    @Override
+    public Note persist(Note note) {
+        em.persist(note);
+        return note;
     }
 
     @Override
@@ -70,5 +83,13 @@ public class NoteDAOImpl implements NoteDAO{
         return ctf;
 
 
+    }
+
+    @Override
+    @Transactional
+    public void deleteCustomTextFieldById(int id) {
+        Query query = em.createQuery("delete from CustomTextFields where id=:data");
+        query.setParameter("data",id);
+        query.executeUpdate();
     }
 }

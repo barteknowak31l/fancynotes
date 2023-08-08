@@ -3,7 +3,9 @@ package com.fazdevguy.fancynotes.entity;
 import jakarta.persistence.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "notes")
@@ -45,15 +47,24 @@ public class Note {
     private Category category;
 
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "ctf_id")
-    private CustomTextFields customTextFields;
+    @OneToMany(mappedBy = "note"
+            ,cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<CustomTextFields> customTextFields;
 
-    public Note(){}
+    public Note(){
+        this.customTextFields = new ArrayList<>();
+    }
+
+    public Note(Integer categoryId){
+        this.categoryId = categoryId;
+        this.customTextFields = new ArrayList<>();
+    }
 
     public Note(String name, String description) {
         this.name = name;
         this.description = description;
+        this.customTextFields = new ArrayList<>();
+
     }
 
     public Note(String name, String description, Date startDate, Date endDate, boolean remind) {
@@ -63,6 +74,17 @@ public class Note {
         this.endDate = endDate;
         this.remind = remind;
         this.archived = false;
+        this.customTextFields = new ArrayList<>();
+    }
+
+    public Note(String name, String description, Date startDate, Date endDate, boolean remind, List<CustomTextFields> customTextFields) {
+        this.name = name;
+        this.description = description;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.remind = remind;
+        this.archived = false;
+        this.customTextFields = customTextFields;
     }
 
     public int getId() {
@@ -137,11 +159,11 @@ public class Note {
         this.category = category;
     }
 
-    public CustomTextFields getCustomTextFields() {
+    public List<CustomTextFields> getCustomTextFields() {
         return customTextFields;
     }
 
-    public void setCustomTextFields(CustomTextFields customTextFields) {
+    public void setCustomTextFields(List<CustomTextFields> customTextFields) {
         this.customTextFields = customTextFields;
     }
 
@@ -159,6 +181,8 @@ public class Note {
                 '}';
     }
 
+    // utilities
+
     public void deepCopy(Note note)
     {
         this.id = note.getId();
@@ -170,6 +194,33 @@ public class Note {
         this.remind = note.isRemind();
         this.archived=note.isArchived();
         this.customTextFields=note.getCustomTextFields();
+
+        for( CustomTextFields ct : customTextFields)
+            ct.setNote(this);
+
     }
 
+    public void addCustomTextFieldToList(CustomTextFields ctf){
+        if(customTextFields == null){
+            customTextFields = new ArrayList<>();
+        }
+
+        customTextFields.add(ctf);
+        ctf.setNote(this);
+
+    }
+
+    public void removeCustomTextFieldFromList(CustomTextFields ctf){
+        if(customTextFields == null) return;
+
+        customTextFields.remove(ctf);
+        ctf.setNote(null);
+
+    }
+
+    public void removeCustomTextFieldFromListByIndex(Integer index) {
+        if(customTextFields == null) return;
+        customTextFields.get(index).setNote(null);
+        customTextFields.remove(index);
+    }
 }

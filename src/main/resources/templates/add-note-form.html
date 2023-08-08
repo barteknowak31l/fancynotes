@@ -7,6 +7,8 @@
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
 
+  <link rel="stylesheet" type="text/css" href="/css/styles.css">
+
   <title>Adding new note</title>
 </head>
 
@@ -33,10 +35,11 @@
 
   <div th:if="${update == null}">
 
-    <form action="#" th:action="@{/notes/addNote(categoryId=${category.id})}" th:object="${note}" method="POST">
+    <form action="#" th:action="@{/notes/addNote}" th:object="${note}" method="POST">
 
       <!-- Add hidden form field to handle the update -->
       <input type="hidden" th:field="*{id}">
+      <input type="hidden" th:field="*{categoryId}">
 
       <input type="text" th:field="*{name}" class="form-control mb-4 w-25" placeholder="name">
       <textarea class="form-control z-depth-1" rows="5" th:field="*{description}" placeholder="description"></textarea><br>
@@ -44,69 +47,81 @@
       End date <input type="date" th:field="*{endDate}" class="form-control mb-4 w-25" placeholder="End date">
       Remind <input type="checkbox" th:field="*{remind}" placeholder="Remind" checked> <br> <br>
 
-      <hr>
-      CUSTOM FIELDS<br><br>
+      <!-- CUSTOM FIELDS TABLE -->
+      <br><hr><br>CUSTOM FIELDS<br>
 
-      <textarea class="form-control z-depth-1" rows="1" th:field="*{customTextFields.field1name}" placeholder="Name"></textarea>
-      <textarea class="form-control z-depth-1" rows="3" th:field="*{customTextFields.field1value}" placeholder="Value"></textarea>
-      <br><br>
-
-      <textarea class="form-control z-depth-1" rows="1" th:field="*{customTextFields.field2name}" placeholder="Name"></textarea>
-      <textarea class="form-control z-depth-1" rows="3" th:field="*{customTextFields.field2value}" placeholder="Value"></textarea>
-      <br><br>
-
-      <textarea class="form-control z-depth-1" rows="1" th:field="*{customTextFields.field3name}" placeholder="Name"></textarea>
-      <textarea class="form-control z-depth-1" rows="3" th:field="*{customTextFields.field3value}" placeholder="Value"></textarea>
-      <br><br>
-
-
-      <button type="submit" class="btn btn-info col-2">Save</button>
-
+      <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+            <th class="text-center">
+              <input type="submit" name="addCtf" value="Add" class="btn btn-info col-2 w-auto"></input>
+            </th>
+            <th>Name</th>
+          <th>Value</th>
+            <th class="text-center">Remove</th>
+        </thead>
+        <tbody>
+       <tr th:each="ctf : ${customTextFields}">
+          <td><input type="hidden" th:field="*{customTextFields[__${ctfStat.index}__].id}"></td>
+          <td> <textarea class="form-control z-depth-1" rows="3" th:field="*{customTextFields[__${ctfStat.index}__].fieldName}" placeholder="Name"></textarea>  </td>
+          <td> <textarea class="form-control z-depth-1" rows="3" th:field="*{customTextFields[__${ctfStat.index}__].fieldValue}" placeholder="Value"></textarea>  </td>
+          <td class="text-center">
+            <button type="submit" name="removeCtf" th:value="*{customTextFields[__${ctfStat.index}__].id}"class="btn btn-danger col-2 w-auto">Remove</button>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+      <input type="submit" name="save" value="Save" class="btn btn-info col-2"></input>
     </form>
-
   </div>
 
 
   <div th:if="${update}">
 
-    <form action="#" th:action="@{/notes/addNote(updateParam=true,categoryId=${category.id})}" th:object="${note}" method="POST">
+    <form action="#" th:action="@{/notes/addNote(updateParam=true)}" th:object="${note}" method="POST">
 
       <!-- Add hidden form field to handle the update -->
       <input type="hidden" th:field="*{id}">
+      <input type="hidden" th:field="*{categoryId}">
 
-      <input type="text" th:field="*{name}" class="form-control mb-4 w-25" placeholder="name">
-      <input type="text" th:field="*{description}" class="form-control mb-4 w-25" placeholder="description">
+      <input type="text" th:field="*{name}" class="form-control mb-4 w-50" placeholder="name">
+      <textarea class="form-control z-depth-1" rows="5" th:field="*{description}" placeholder="description"></textarea><br>
       <input type="date" th:field="*{startDate}" class="form-control mb-4 w-25" placeholder="Start date">
       <input type="date" th:field="*{endDate}" class="form-control mb-4 w-25" placeholder="End date">
       Remind <input type="checkbox" th:field="*{remind}" placeholder="Remind" checked> <br> <br>
 
-      <hr>
-      CUSTOM FIELDS<br><br>
+      <br><hr><br>CUSTOM FIELDS<br>
 
-      <textarea class="form-control z-depth-1" rows="1" th:field="*{customTextFields.field1name}" placeholder="Name"></textarea>
-      <textarea class="form-control z-depth-1" rows="3" th:field="*{customTextFields.field1value}" placeholder="Value"></textarea>
-      <br><br>
+      <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+        <th class="text-center">
+          <input type="submit" name="addCtf" value="Add" class="btn btn-info col-2 w-auto">
+        </th>
+        <th>Name</th>
+        <th>Value</th>
+        <th class="text-center">Remove</th>
+        </thead>
+        <tbody>
+          <tr th:each="ctf, ctfStat : *{customTextFields}">
+            <td><input type="hidden" th:field="*{customTextFields[__${ctfStat.index}__].id}"></td>
+            <td> <textarea class="form-control z-depth-1" rows="3" th:field="*{customTextFields[__${ctfStat.index}__].fieldName}" placeholder="Name"></textarea>  </td>
+            <td> <textarea class="form-control z-depth-1" rows="3" th:field="*{customTextFields[__${ctfStat.index}__].fieldValue}" placeholder="Value"></textarea>  </td>
+            <td class="text-center">
+              <button type="submit" name="removeCtf" th:value="*{customTextFields[__${ctfStat.index}__].id}"class="btn btn-danger col-2 w-auto">Remove</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
 
-      <textarea class="form-control z-depth-1" rows="1" th:field="*{customTextFields.field2name}" placeholder="Name"></textarea>
-      <textarea class="form-control z-depth-1" rows="3" th:field="*{customTextFields.field2value}" placeholder="Value"></textarea>
-      <br><br>
-
-      <textarea class="form-control z-depth-1" rows="1" th:field="*{customTextFields.field3name}" placeholder="Name"></textarea>
-      <textarea class="form-control z-depth-1" rows="3" th:field="*{customTextFields.field3value}" placeholder="Value"></textarea>
-      <br><br>
-
-      <button type="submit" class="btn btn-info col-2">Save</button>
+      <input type="submit" name="save" value="Save" class="btn btn-info col-2"></input>
 
     </form>
 
   </div>
 
-
   <hr>
   <a th:href="@{/notes/showAll(categoryId=${category.id})}" th:text="'Back to ' + ${category.name} + ' notes'"></a>
   <br>
   <a th:href="@{/categories/showAll}">Back to category list</a>
-
 
 </div>
 

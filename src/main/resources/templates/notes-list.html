@@ -40,7 +40,7 @@
 
 
   <!-- Table of categories -->
-  <table class="table table-bordered table-striped">
+    <table class="table table-bordered table-striped text-center">
 
     <thead class="table-dark">
     <tr>
@@ -59,13 +59,13 @@
     </tr>
     </thead>
 
-    <tbody>
+    <tbody  >
     <tr th:each="tempNote : ${category.notesList}">
       <td>
-        <a th:href="@{/notes/switchArchived(noteId=${tempNote.id},archived=${archived})}" class="btn btn-info btn-sm"/>
+        <a th:href="@{/notes/switchArchived(noteId=${tempNote.id},archived=${archived})}" class="btn btn-info btn-lg"/>
       </td>
       <td th:text="${tempNote.name}"/>
-      <td th:text="${tempNote.description}"/>
+      <td th:text="${tempNote.description}" class="w-25"/>
       <td th:text="${tempNote.startDate}"/>
       <td th:text="${tempNote.endDate}"/>
       <td th:text="${tempNote.remind}"/>
