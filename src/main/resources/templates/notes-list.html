@@ -7,103 +7,138 @@
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
 
+  <link rel="stylesheet" type="text/css" href="/css/styles.css">
+
+
 
   <title>Your Notes</title>
 </head>
 <body>
-<div class="container">
 
+<div style="margin:15px;margin-bottom:0px;">
   <h3 th:text="'Your ' + (${archived} ? 'archived ' : '') + ${category.name} + ' notes'"></h3>
+ </div>
   <hr>
 
+  <div class="">
+    <div class="row g-0 mb-3">
+      <!-- Navigation -->
+      <div style="background-color: #878787; min-height: 90vh;" class="shadow-lg text-center col-md-1 mx-1">
 
-  <div th:if="${archived==false}">
+        <div class="w-auto">
 
-    <!-- Add button -->
-    <a th:href="@{/notes/addForm(categoryId=${category.id})}" class="btn btn-primary btn-sm mb-3">
-      New note
-    </a>
 
-    <!-- Show archived button -->
-    <a th:href="@{/notes/showAll(categoryId=${category.id},archived=true)}" class="btn btn-primary btn-sm mb-3">
-      Show archived notes
-    </a>
+          <div class="fw-bold">Navigation</div>
+          <hr>
+          <br>
+          <hr>
+
+            <div th:if="${archived==false}">
+
+              <!-- Add button -->
+              <div>
+                <a th:href="@{/notes/addForm(categoryId=${category.id})}" class="btn btn-success btn-sm mb-3 mt-3">
+                  New note
+                </a>
+              </div>
+
+
+              <!-- Show archived button -->
+              <div>
+                <a th:href="@{/notes/showAll(categoryId=${category.id},archived=true)}" class="btn btn-secondary btn-sm mb-3">
+                  Archived notes
+                </a>
+              </div>
+
+            </div>
+
+            <div th:if="${archived}">
+              <!-- Show non-archived button -->
+              <a th:href="@{/notes/showAll(categoryId=${category.id},archived=false)}" class="btn btn-secondary btn-sm mb-3 mt-3">
+                Show non-archived notes
+              </a>
+            </div>
+
+          <hr>
+
+          <a th:href="@{/categories/showAll}" class="btn btn-secondary btn-sm mb-3 mt-3">
+            Categories
+          </a>
+          <hr>
+
+          <a th:href="@{/hello}" class="btn btn-secondary btn-sm mb-3 mt-3">
+            Home
+          </a>
+          <hr>
+        </div>
+      </div>
+      <!-- End of navigation -->
+
+
+      <!-- Display content --->
+      <div class="shadow-lg col" style="background-color: #878787;">
+        <div class="container shadow-lg p-3" style="background-color: #878787;min-height:90vh;margin-bottom:3px;">
+
+
+          <!-- Table of categories -->
+          <table class="table table-bordered table-striped table-dark text-center">
+
+            <thead class="table-dark">
+            <tr>
+              <div th:if="${archived==false}">
+                <th>Send to archive</th>
+              </div>
+              <div th:if="${archived}">
+                <th>Unarchive</th>
+              </div>
+              <th>Name</th>
+              <th>Description</th>
+              <th>Start date</th>
+              <th>End Date</th>
+              <th>Remind</th>
+              <th>Action</th>
+            </tr>
+            </thead>
+
+            <tbody  >
+            <tr th:each="tempNote : ${category.notesList}">
+              <td>
+                <a th:href="@{/notes/switchArchived(noteId=${tempNote.id},archived=${archived})}" class="btn btn-secondary btn-lg"/>
+              </td>
+              <td th:text="${tempNote.name}"/>
+              <td th:text="${tempNote.description}" class="w-15 text-wrap"/>
+              <td th:text="${tempNote.startDate}" class="w-10"/>
+              <td th:text="${tempNote.endDate}" class="w-10"/>
+              <td th:text="${tempNote.remind}"/>
+
+              <!-- Action buttons -->
+              <td  class="w-25">
+
+                <a th:href="@{/notes/showDetails(noteId=${tempNote.id})}" class="btn btn-success btn-sm">
+                  Show details
+                </a>
+
+                <a th:href="@{/notes/update(noteId=${tempNote.id})}" class="btn btn-warning btn-sm">
+                  Update Note
+                </a>
+
+                <a th:href="@{/notes/delete(noteId=${tempNote.id})}"
+                   class="btn btn-danger btn-sm"
+                   onclick="if (!(confirm('Are you sure to delete this note?'))) return false">
+                  Delete note
+                </a>
+
+              </td>
+            </tr>
+
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <!-- End of display content --->
+
+    </div>
   </div>
 
-  <div th:if="${archived}">
-    <!-- Show back button -->
-    <a th:href="@{/notes/showAll(categoryId=${category.id},archived=false)}" class="btn btn-primary btn-sm mb-3">
-      Show non-archived notes
-    </a>
-  </div>
-
-
-
-  <!-- Table of categories -->
-    <table class="table table-bordered table-striped text-center">
-
-    <thead class="table-dark">
-    <tr>
-      <div th:if="${archived==false}">
-        <th>Send to archive</th>
-      </div>
-      <div th:if="${archived}">
-        <th>Unarchive</th>
-      </div>
-      <th>Name</th>
-      <th>Description</th>
-      <th>Start date</th>
-      <th>End Date</th>
-      <th>Remind</th>
-      <th>Action</th>
-    </tr>
-    </thead>
-
-    <tbody  >
-    <tr th:each="tempNote : ${category.notesList}">
-      <td>
-        <a th:href="@{/notes/switchArchived(noteId=${tempNote.id},archived=${archived})}" class="btn btn-info btn-lg"/>
-      </td>
-      <td th:text="${tempNote.name}"/>
-      <td th:text="${tempNote.description}" class="w-25"/>
-      <td th:text="${tempNote.startDate}"/>
-      <td th:text="${tempNote.endDate}"/>
-      <td th:text="${tempNote.remind}"/>
-
-      <!-- Action buttons -->
-      <td>
-
-        <a th:href="@{/notes/showDetails(noteId=${tempNote.id})}" class="btn btn-info btn-sm">
-          Show details
-        </a>
-
-        <a th:href="@{/notes/update(noteId=${tempNote.id})}" class="btn btn-info btn-sm">
-          Update Note
-        </a>
-
-        <a th:href="@{/notes/delete(noteId=${tempNote.id})}"
-           class="btn btn-info btn-sm"
-           onclick="if (!(confirm('Are you sure to delete this note?'))) return false">
-          Delete note
-        </a>
-
-
-      </td>
-
-    </tr>
-    </tbody>
-
-  </table>
-
-  <!-- Home button -->
-  <a th:href="@{/categories/showAll}" class="btn btn-primary btn-sm mb-3">
-    Back to Categories
-  </a>
-  <br>
-  <a th:href="@{/hello}" class="btn btn-primary btn-sm mb-3">
-    Back to home
-  </a>
-
-</div>
 </body>
 </html>
