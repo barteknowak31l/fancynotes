@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th = "http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+
+  <link rel="stylesheet" type="text/css" href="/css/styles.css">
+
+
+  <title>Note details</title>
+</head>
+
+<body>
+
+<h3 style="margin:15px;margin-bottom:0px;">Note Details <img  th:src="@{/img/logo.png}" alt="Fancy Notes" class="my-logo"> </h3><hr>
+
+
+
+<div class="">
+
+  <div class="row g-0 mb-3">
+    <!-- Navigation -->
+    <div style="background-color: #878787; min-height: 90vh;" class="shadow-lg text-center col-md-1 mx-1">
+
+      <div class="w-auto">
+        <div class="fw-bold">Navigation</div>
+        <hr>
+        <br>
+
+        <hr>
+        <a class="btn btn-secondary btn-sm mb-3 mt-3" th:href="@{/admin/notes/showAll(categoryId=${note.category.id})}" th:text="${note.category.name} + ' notes'" ></a>
+        <hr>
+
+        <a th:href="@{/admin/categories/showAll}" class="btn btn-secondary btn-sm mb-3 mt-3">
+          Categories
+        </a>
+        <hr>
+
+        <a th:href="@{/hello}" class="btn btn-secondary btn-sm mb-3 mt-3">
+          Home
+        </a>
+        <hr>
+
+        <form action="#" th:action="@{/logout}" method="POST">
+          <button type="submit" class="btn btn-secondary btn-sm mb-3 mt-3">Logout</button>
+        </form>
+
+      </div>
+    </div>
+    <!-- End of navigation -->
+
+    <!-- Display properties -->
+    <div class="shadow-lg col" style="background-color: #878787;">
+
+      <div class="row m-4">
+        <div style="background-color: #c4be9d; margin-right: 5px;" class="col shadow-lg">
+
+          <div class="outer">
+            <div class="fw-bold">Owner: </div>
+            <div class="fill-2"> <p th:text="${note.category.user.username}"> <br></div>
+          </div>
+
+          <div class="outer">
+            <div class="fw-bold">Name: </div>
+            <div class="fill-2"> <p th:text="${note.name}"> <br></div>
+          </div>
+          <hr>
+          <div class="outer">
+            <div class="fw-bold">Description: </div>
+            <div class="fill-2 max-fixed-width text-wrapping"> <p th:text="${note.description}"> <br></div>
+          </div>
+          <hr>
+
+          <div class="outer">
+            <div class="fw-bold">Start date: </div>
+            <div class="fill-2"> <p th:text="${note.startDate}"> <br></div>
+          </div>
+          <hr>
+
+          <div class="outer">
+            <div class="fw-bold">End date: </div>
+            <div class="fill-2"> <p th:text="${note.endDate}"> <br></div>
+          </div>
+          <hr>
+
+          <div class="outer">
+            <div class="fw-bold">Remind: </div>
+            <div class="fill-2"> <p th:text="${note.remind}"> <br></div>
+          </div>
+          <hr>
+
+          <div class="outer">
+            <div class="fw-bold">Archived: </div>
+            <div class="fill-2"> <p th:text="${note.archived}"> <br></div>
+          </div>
+          <hr>
+
+        </div>
+
+        <div style="background-color: #c4be9d; margin-left:5px;" class="col shadow-lg">
+
+          <div class="fw-bold">Custom fields</div>
+          <hr>
+
+          <div th:each="ctf, ctfStat : ${note.CustomTextFields}">
+
+            <div class="outer">
+              <div class="fw-bold text-wrapping" th:text="${note.CustomTextFields[__${ctfStat.index}__].fieldName} + ':'"></div>
+              <div class="fill-2  text-wrapping" th:text="${note.CustomTextFields[__${ctfStat.index}__].fieldValue}"></div>
+            </div>
+            <hr>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="w-auto"></div>
+    </div>
+    <!-- End of display properties -->
+
+  </div>
+
+
+
+</div>
+
+</body>
+</html>

@@ -14,9 +14,28 @@
 
 <body>
 
-  <h3 style="margin:15px;margin-bottom:0px;" th:if="${update == null}" th:text="'Adding new ' +${category.name} +' note'"></h3>
-  <h3 style="margin:15px;margin-bottom:0px;" th:if="${update}" th:text="'Updating ' +${category.name} +' note'"></h3>
-  <hr>
+  <div th:if="${update == null}">
+    <div class="outer-2">
+      <div>
+        <h3 style="margin:15px;margin-bottom:0px;" th:text="'Adding new ' +${category.name} +' note'"></h3>
+        <hr>
+      </div>
+      <img  th:src="@{/img/logo.png}" alt="Fancy Notes" class="my-logo fill-2" style="padding-top:15px; padding-right:15px;">
+    </div>
+  </div>
+
+  <div th:if="${update}">
+    <div class="outer-2">
+
+    <div>
+      <h3 style="margin:15px;margin-bottom:0px;" th:text="'Updating ' +${category.name} +' note'"></h3>
+      <hr>
+    </div>
+
+      <img  th:src="@{/img/logo.png}" alt="Fancy Notes" class="my-logo fill-2" style="padding-top:15px; padding-right:15px;">
+    </div>
+  </div>
+
 
 
   <div class="">
@@ -40,6 +59,10 @@
           Home
         </a>
         <hr>
+
+        <form action="#" th:action="@{/logout}" method="POST">
+          <button type="submit" class="btn btn-secondary btn-sm mb-3 mt-3">Logout</button>
+        </form>
 
       </div>
       <!-- End of navigation -->

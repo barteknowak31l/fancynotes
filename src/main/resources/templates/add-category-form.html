@@ -15,8 +15,8 @@
 
 <body>
 
-  <h3 style="margin:15px;margin-bottom:0px;" th:if="${update == null}"> Adding new category</h3>
-  <h3 style="margin:15px;margin-bottom:0px;" th:if="${update}"> Updating category</h3>
+  <h3 style="margin:15px;margin-bottom:0px;" th:if="${update == null}"> Adding new category <img  th:src="@{/img/logo.png}" alt="Fancy Notes" class="my-logo"></h3>
+  <h3 style="margin:15px;margin-bottom:0px;" th:if="${update}"> Updating category <img  th:src="@{/img/logo.png}" alt="Fancy Notes" class="my-logo"></h3>
   <hr>
 
   <div class="">
@@ -43,12 +43,16 @@
           </a>
           <hr>
 
+          <form action="#" th:action="@{/logout}" method="POST">
+            <button type="submit" class="btn btn-secondary btn-sm mb-3 mt-3">Logout</button>
+          </form>
+
         </div>
       </div>
       <!-- End of navigation -->
 
       <!-- Display content -->
-      <div class="col p-3 shadow-lg" style="background-color: #878787;min-height:90vh;margin-bottom:3px;">
+      <div class="col p-3 shadow-lg" style="background-color: #878787;min-height:90vh;">
         <div class="container shadow-lg" style="background-color: #878787; min-height:90vh;margin-bottom:3px;">
           <div class="py-3">
             <div th:if="${saveError}">

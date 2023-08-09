@@ -12,6 +12,7 @@ public class Role {
     @EmbeddedId
     private RoleKey roleId;
 
+
     public Role(){}
 
     public Role(RoleKey roleId) {

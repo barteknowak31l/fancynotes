@@ -1,4 +1,45 @@
 body {
     background-color: #85c2ff;
 }
-s
+
+
+.table td {
+    word-wrap: break-word; /* Zawijanie tekstu */
+    white-space: normal; /* Obsługa zawijania tekstu */
+    vertical-align: center;
+    text-align: center;
+
+   }
+
+
+.max-fixed-width{
+    max-width: 350px;
+}
+
+.min-fixed-width{
+    min-width: 350px;
+}
+
+.text-wrapping{
+word-wrap: break-word; /* Zawijanie tekstu */
+    white-space: normal; /* Obsługa zawijania tekstu */
+    }
+
+.outer {
+    display: grid;
+    grid-template-columns: auto 1fr;
+}
+
+.outer-2 {
+    display: grid;
+    grid-template-columns: 1fr auto;
+}
+
+        .fill-2{
+           margin-left: 3px;
+            grid-column: 2;
+        }
+
+.my-logo{
+float: right;
+}

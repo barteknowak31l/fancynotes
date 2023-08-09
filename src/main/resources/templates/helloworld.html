@@ -8,6 +8,7 @@
 </head>
 <body>
 
+    <img  th:src="@{/img/logo.png}" alt="Fancy Notes" class="my-logo">
     <p th:text="'Hello ' + ${usr.getFirstName()} + ' ' + ${usr.getLastName()} + '!'" class="funny" />
     <!--<p th:text="'Hello ' + ${usr} " class="funny" />-->
 
@@ -20,6 +21,11 @@
         <input type="submit" value="Categories" />
     </form>
 
+
+
+    <form action="#" th:action="@{/admin/categories/showAll}" method="GET">
+        <input type="submit" value="ADMINS ONLY" />
+    </form>
 
     <form action="#" th:action="@{logout}" method="POST">
         <input type="submit" value="logout" />

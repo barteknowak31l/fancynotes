@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Repository
 public class RoleDAOImpl implements RoleDAO{
 
@@ -36,6 +38,17 @@ public class RoleDAOImpl implements RoleDAO{
             role = null;
         }
         return role;
+    }
+
+    @Override
+    public List<Role> findAllRolesByUsername(String username) {
+        TypedQuery<Role> query = em.createQuery("select r from Role r "+
+                "where r.roleId.username=:data",Role.class);
+        query.setParameter("data",username);
+        List<Role> roles = query.getResultList();
+
+        return roles;
+
     }
 
     @Override

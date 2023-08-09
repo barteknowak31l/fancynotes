@@ -6,6 +6,8 @@ import com.fazdevguy.fancynotes.entity.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class RoleServiceImpl implements RoleService{
 
@@ -21,6 +23,11 @@ public class RoleServiceImpl implements RoleService{
     @Override
     public Role findRoleByName(String theRoleName) {
         return roleDAO.findRoleByName(theRoleName);
+    }
+
+    @Override
+    public List<Role> findAllRolesByUsername(String username) {
+        return roleDAO.findAllRolesByUsername(username);
     }
 
     @Override

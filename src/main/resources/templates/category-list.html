@@ -14,7 +14,8 @@
 </head>
 <body>
 
-<h3 style="margin:15px;margin-bottom:0px;">Your Categories</h3>
+<h3 style="margin:15px;margin-bottom:0px;">Your Categories <img  th:src="@{/img/logo.png}" alt="Fancy Notes" class="my-logo"></h3>
+
 <hr>
     <div class="">
         <div class="row g-0 mb-3">
@@ -48,12 +49,17 @@
                     </a>
                     <hr>
 
+                    <form action="#" th:action="@{/logout}" method="POST">
+                        <button type="submit" class="btn btn-secondary btn-sm mb-3 mt-3">Logout</button>
+                    </form>
+                    <hr>
+
                 </div>
             </div>
             <!-- End of navigation -->
 
             <!-- Display content -->
-                <div class="col p-3 shadow-lg" style="background-color: #878787;min-height:90vh;margin-bottom:3px;">
+                <div class="col p-3 shadow-lg" style="background-color: #878787;min-height:90vh;">
 
                     <!-- Table of categories -->
                     <table class="table table-bordered table-striped table-dark shadow-lg text-center">
@@ -69,9 +75,9 @@
                         <tbody>
                         <tr th:each="tempCategory : ${categoryList}">
                             <td th:text="${tempCategory.name}"/>
-                            <td th:text="${tempCategory.note}"/>
+                            <td class="max-fixed-width" th:text="${tempCategory.note}"/>
 
-                            <td>
+                            <td class="min-fixed-width">
 
                                 <a th:href="@{/notes/showAll(categoryId=${tempCategory.id})}" class="btn btn-success btn-sm">
                                     Show notes
