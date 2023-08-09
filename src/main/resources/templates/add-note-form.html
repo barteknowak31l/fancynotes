@@ -47,6 +47,14 @@
         <hr>
         <br>
 
+        <div th:if="${backToDetails}">
+          <a th:href="@{/notes/showDetails(noteId=${note.id})}" class="btn btn-warning btn-sm mb-3 mt-3">
+            Back
+          </a>
+        </div>
+        <hr>
+
+
         <a class="btn btn-secondary btn-sm mb-3 mt-3" th:href="@{/notes/showAll(categoryId=${category.id})}" th:text="${category.name} + ' notes'"></a>
         <hr>
 
@@ -128,7 +136,7 @@
 
             <div th:if="${update}">
 
-              <form action="#" th:action="@{/notes/addNote(updateParam=true)}" th:object="${note}" method="POST">
+              <form action="#" th:action="@{${backToDetails} ? '/notes/addNote?updateParam=true&backToDetails=true' : '/notes/addNote?updateParam=true'}" th:object="${note}" method="POST">
 
                 <!-- Add hidden form field to handle the update -->
                 <input type="hidden" th:field="*{id}">

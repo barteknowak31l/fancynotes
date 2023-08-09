@@ -157,6 +157,7 @@ public class AdminController {
 
     @GetMapping("/notes/update")
     public String updateNote(@RequestParam(value = "noteId") Integer noteId,
+                             @RequestParam(value = "backToDetails",required = false) Boolean backToDetails,
                              Model model){
 
         Note note = noteService.findNoteById(noteId);
@@ -167,6 +168,10 @@ public class AdminController {
         model.addAttribute("update",true);
 
 
+        if(backToDetails != null && backToDetails){
+            model.addAttribute("backToDetails",true);
+        }
+
         return "admin/admin-add-note-form";
 
     }
@@ -175,7 +180,10 @@ public class AdminController {
     public String addNoteSave(@ModelAttribute(value = "note") Note note,
                               @ModelAttribute(value = "customTextFields") ArrayList<CustomTextFields> ctf,
                               Model model,
-                              @RequestParam(value="updateParam", required = false) Boolean isUpdate) {
+                              @RequestParam(value="updateParam", required = false) Boolean isUpdate,
+                              @RequestParam(value = "backToDetails",required = false) Boolean backToDetails
+    )
+    {
 
         Category category = categoryService.findCategoryWithNotes(note.getCategoryId());
 
@@ -223,6 +231,10 @@ public class AdminController {
 
         }
 
+        if(backToDetails != null && backToDetails){
+            return "redirect:/notes/showDetails?noteId="+note.getId();
+        }
+
         return "redirect:/admin/notes/showAll?categoryId=" + note.getCategoryId();
     }
 
@@ -230,7 +242,9 @@ public class AdminController {
     public String addNoteAddCtf(@ModelAttribute(value = "note") Note note,
                                 @ModelAttribute(value = "customTextFields")ArrayList<CustomTextFields> ctf,
                                 Model model,
-                                @RequestParam(value="updateParam", required = false) Boolean isUpdate){
+                                @RequestParam(value="updateParam", required = false) Boolean isUpdate,
+                                @RequestParam(value = "backToDetails",required = false) Boolean backToDetails
+                                ){
 
 
         Category category = categoryService.findCategoryWithNotes(note.getCategoryId());
@@ -290,12 +304,18 @@ public class AdminController {
         model.addAttribute("category",category);
         model.addAttribute("customTextFields",note.getCustomTextFields());
 
+        if(backToDetails != null && backToDetails){
+            model.addAttribute("backToDetails",true);
+        }
+
         return "admin/admin-add-note-form";
 
     }
 
     @PostMapping(value = "/notes/addNote", params = "removeCtf")
-    public String deleteCtf(@RequestParam("removeCtf") String removeCtfId,Model model)
+    public String deleteCtf(@RequestParam("removeCtf") String removeCtfId,Model model,
+                            @RequestParam(value = "backToDetails",required = false) Boolean backToDetails
+                            )
     {
 
         Integer ctfId = Integer.parseInt(removeCtfId);
@@ -317,6 +337,10 @@ public class AdminController {
         model.addAttribute("category",category);
         model.addAttribute("customTextFields",note.getCustomTextFields());
         model.addAttribute("update",true);
+
+        if(backToDetails != null && backToDetails){
+            model.addAttribute("backToDetails",true);
+        }
 
         return "admin/admin-add-note-form";
     }

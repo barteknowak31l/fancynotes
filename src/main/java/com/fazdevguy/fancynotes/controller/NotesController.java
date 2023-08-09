@@ -73,10 +73,11 @@ public class NotesController {
     public String addNoteSave(@ModelAttribute(value = "note") Note note,
                               @ModelAttribute(value = "customTextFields")ArrayList<CustomTextFields> ctf,
                               Model model,
-                              @RequestParam(value="updateParam", required = false) Boolean isUpdate){
+                              @RequestParam(value="updateParam", required = false) Boolean isUpdate,
+                              @RequestParam(value = "backToDetails",required = false) Boolean backToDetails
+                              )
+    {
 
-
-        System.out.println("=====>>> IN SAVE VERSION");
         Category category = categoryService.findCategoryWithNotes(note.getCategoryId());
 
 
@@ -126,6 +127,9 @@ public class NotesController {
             return "add-note-form";
         }
 
+        if(backToDetails != null && backToDetails){
+            return "redirect:/notes/showDetails?noteId="+note.getId();
+        }
 
         return "redirect:/notes/showAll?categoryId="+note.getCategoryId();
     }
@@ -134,7 +138,8 @@ public class NotesController {
     public String addNoteAddCtf(@ModelAttribute(value = "note") Note note,
                                 @ModelAttribute(value = "customTextFields")ArrayList<CustomTextFields> ctf,
                           Model model,
-                          @RequestParam(value="updateParam", required = false) Boolean isUpdate){
+                          @RequestParam(value="updateParam", required = false) Boolean isUpdate,
+                                @RequestParam(value = "backToDetails",required = false) Boolean backToDetails){
 
 
         Category category = categoryService.findCategoryWithNotes(note.getCategoryId());
@@ -195,12 +200,17 @@ public class NotesController {
         model.addAttribute("category",category);
         model.addAttribute("customTextFields",note.getCustomTextFields());
 
+        if(backToDetails != null && backToDetails){
+            model.addAttribute("backToDetails",true);
+        }
+
         return "add-note-form";
     }
 
 
     @GetMapping("/update")
     public String updateNote(@RequestParam(value = "noteId") Integer noteId,
+                             @RequestParam(value = "backToDetails",required = false) Boolean backToDetails,
                              Model model){
 
         Note note = noteService.findNoteById(noteId);
@@ -210,6 +220,9 @@ public class NotesController {
         model.addAttribute("customTextFields",note.getCustomTextFields());
         model.addAttribute("update",true);
 
+        if(backToDetails != null && backToDetails){
+         model.addAttribute("backToDetails",backToDetails);
+        }
 
         return "add-note-form";
 
@@ -243,7 +256,9 @@ public class NotesController {
 
 
     @PostMapping(value = "/addNote", params = "removeCtf")
-    public String deleteCtf(@RequestParam("removeCtf") String removeCtfId,Model model)
+    public String deleteCtf(@RequestParam("removeCtf") String removeCtfId,
+            @RequestParam(value= "backToDetails" ,required = false) Boolean backToDetails,
+                            Model model)
     {
 
         Integer ctfId = Integer.parseInt(removeCtfId);
@@ -266,6 +281,10 @@ public class NotesController {
         model.addAttribute("category",category);
         model.addAttribute("customTextFields",note.getCustomTextFields());
         model.addAttribute("update",true);
+
+        if(backToDetails != null && backToDetails){
+            model.addAttribute("backToDetails",true);
+        }
 
         return "add-note-form";
     }

@@ -29,6 +29,10 @@
                 <hr>
                 <br>
 
+                <a th:href="@{/notes/update(noteId=${note.id}, backToDetails=true)}" class="btn btn-warning btn-sm">
+                    Update Note
+                </a>
+
                 <hr>
                 <a class="btn btn-secondary btn-sm mb-3 mt-3" th:href="@{/notes/showAll(categoryId=${note.category.id})}" th:text="${note.category.name} + ' notes'" ></a>
                 <hr>
